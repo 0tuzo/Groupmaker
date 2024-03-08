@@ -1,0 +1,108 @@
+
+<title>Sommer Sporttag Gruppen-Einteiler</title>
+
+<html>
+  <head>
+    <style>
+      body {
+        background-image: url(images/Schule\ oetwil.jpg);
+        background-repeat: no-repeat;
+        background-size: cover;
+      }
+
+      ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      ul li {
+        border: 1px solid #ddd;
+        margin-top: -1px;
+        background-color: #f6f6f6;
+        padding: 12px;
+      }
+
+      h2 {
+        color: #fff;
+        background-color: #333;
+        padding: 10px;
+      }
+
+      button {
+        margin: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <img
+      class="image"
+      src="images/Schule oetwil.jpg"
+      alt="Schule Oetwil am See"
+    />
+    <h1>Gruppen-Einteiler</h1>
+    <h1 p>Gib die Namen der Teilnehmer*innen ein, getrennt durch Kommas:</p>
+    <input
+      id="names"
+      type="text"
+      value=""
+    />
+    <p>Wähle die Anzahl der Gruppen aus:</p>
+    <input id="groups" type="number" value="2" min="1" />
+    <button id="submit" onclick="divide()">Gruppen einteilen</button>
+    <div id="result"></div>
+    <script>
+      function divide() {
+        // Get the input values
+        let names = document.getElementById("names").value.split(",");
+        let groups = parseInt(document.getElementById("groups").value);
+
+        // Check if the input is valid
+        if (names.length < groups || groups < 1) {
+          alert("Ungültige Eingabe!");
+          return;
+        }
+
+        // Shuffle the names array
+        for (let i = names.length - 1; i > 0; i--) {
+          let j = Math.floor(Math.random() * (i + 1));
+          [names[i], names[j]] = [names[j], names[i]];
+        }
+
+        // Divide the names into groups
+        let result = [];
+        let size = Math.floor(names.length / groups);
+        let index = 0;
+        for (let i = 0; i < groups; i++) {
+          result.push(names.slice(index, index + size));
+          index += size;
+        }
+
+        // Add the remaining names to the last group
+        if (index < names.length) {
+          result[result.length - 1] = result[result.length - 1].concat(
+            names.slice(index)
+          );
+        }
+
+        // Display the result
+        let output = document.getElementById("result");
+        output.innerHTML = "";
+        for (let i = 0; i < result.length; i++) {
+          let group = document.createElement("div");
+          let title = document.createElement("h2");
+          title.textContent = "Gruppe " + (i + 1);
+          group.appendChild(title);
+          let list = document.createElement("ul");
+          for (let name of result[i]) {
+            let item = document.createElement("li");
+            item.textContent = name;
+            list.appendChild(item);
+          }
+          group.appendChild(list);
+          output.appendChild(group);
+        }
+      }
+    </script>
+  </body>
+</html>
